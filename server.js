@@ -36,87 +36,65 @@ app.use(cors());
 
 // api ---------------------------------------------------------------------
 // get all todos
-app.get("/api/todos", function (req, res) {
-  // use mongoose to get all todos in the database
-  Todo.find(function (err, todos) {
-    // if there is an error retrieving, send the error. nothing after res.send(err) will execute
-    if (err) res.send(err);
-
-    res.json(todos); // return all todos in JSON format
-  });
+app.get("/api/todos", async (req, res) => {
+  try {
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
-app.get("/api/todos/:todo_id", function (req, res) {
-  // use mongoose to get all todos in the database
-  Todo.find(
-    {
-      _id: req.params.todo_id,
-    },
-    function (err, todos) {
-      // if there is an error retrieving, send the error. nothing after res.send(err) will execute
-      if (err) res.send(err);
-
-      res.json(todos); // return all todos in JSON format
-    }
-  );
+app.get("/api/todos/:todo_id", async (req, res) => {
+  try {
+    const todo = await Todo.findById(req.params.todo_id);
+    res.json(todo);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 // create todo and send back all todos after creation
-app.post("/api/todos", function (req, res) {
-  // create a todo, information comes from AJAX request from Angular
-  Todo.create(
-    {
+app.post("/api/todos", async (req, res) => {
+  try {
+    await Todo.create({
       text: req.body.text,
       done: false,
-    },
-    function (err, todo) {
-      if (err) res.send(err);
-
-      // get and return all the todos after you create another
-      Todo.find(function (err, todos) {
-        if (err) res.send(err);
-        res.json(todos);
-      });
-    }
-  );
+    });
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 // update a todo (mark as done/undone)
-app.put("/api/todos/:todo_id", function (req, res) {
-  Todo.findOneAndUpdate(
-    { _id: req.params.todo_id },
-    { done: req.body.done },
-    { new: true },
-    function (err, todo) {
-      if (err) res.send(err);
-      // get and return all the todos after update
-      Todo.find(function (err, todos) {
-        if (err) res.send(err);
-        res.json(todos);
-      });
-    }
-  );
+app.put("/api/todos/:todo_id", async (req, res) => {
+  try {
+    await Todo.findOneAndUpdate(
+      { _id: req.params.todo_id },
+      { done: req.body.done },
+      { new: true }
+    );
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 // app.put("/api/todos", function (req, res) {});
 app.patch("/api/todos", function (req, res) {});
 
 // delete a todo
-app.delete("/api/todos/:todo_id", function (req, res) {
-  Todo.remove(
-    {
-      _id: req.params.todo_id,
-    },
-    function (err, todo) {
-      if (err) res.send(err);
-
-      // get and return all the todos after you create another
-      Todo.find(function (err, todos) {
-        if (err) res.send(err);
-        res.json(todos);
-      });
-    }
-  );
+app.delete("/api/todos/:todo_id", async (req, res) => {
+  try {
+    await Todo.deleteOne({ _id: req.params.todo_id });
+    const todos = await Todo.find();
+    res.json(todos);
+  } catch (err) {
+    res.status(500).send(err);
+  }
 });
 
 // application -------------------------------------------------------------
