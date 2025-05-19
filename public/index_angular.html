@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<!-- ASSIGN OUR ANGULAR MODULE -->
+<html ng-app="nodeTodo">
+  <head>
+    <!-- META -->
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <!-- Optimize mobile viewport -->
+    <title>Node/Angular Todo App</title>
+    <!-- SCROLLS -->
+    <link
+      rel="stylesheet"
+      href="//netdna.bootstrapcdn.com/bootstrap/3.0.0/css/bootstrap.min.css"
+    />
+    <!-- load bootstrap -->
+    <style>
+      html {
+        overflow-y: scroll;
+        max-width: 1000px;
+        margin: 0 auto;
+      }
+      body {
+        padding-top: 50px;
+      }
+      .todo-list {
+        margin: 15px;
+      }
+      #todo-form {
+        margin: 20px;
+      }
+      .todo-section {
+        margin-bottom: 40px;
+      }
+      .section-header {
+        margin: 15px;
+        padding-bottom: 5px;
+        border-bottom: 1px solid #eee;
+      }
+      .nav-tabs a {
+        outline: none;
+      }
+      .checkbox {
+        margin-bottom: 20px;
+      }
+      .checkbox label {
+        display: inline-block;
+        max-width: 80%;
+        word-break: break-word;
+        white-space: normal;
+        vertical-align: middle;
+      }
+    </style>
+    <!-- SPELLS -->
+    <script src="//ajax.googleapis.com/ajax/libs/angularjs/1.0.8/angular.min.js"></script>
+    <!-- load angular -->
+    <script src="core.js"></script>
+  </head>
+  <!-- SET THE CONTROLLER AND GET ALL TODOS WITH INITIALIZE FUNCTION -->
+  <body ng-controller="mainController">
+    <div class="container">
+      <!-- HEADER AND TODO COUNT -->
+      <div class="jumbotron text-center">
+        <h1>
+          nodeTODO {{ cos }}
+          <span class="label label-info">{{ todos.length }}</span>
+        </h1>
+        <div id="todo-form" class="row">
+          <div class="col-sm-8 col-sm-offset-2 text-center">
+            <input
+              type="text"
+              class="form-control text-center"
+              ng-model="cos"
+              placeholder="TODO name"
+            />
+          </div>
+        </div>
+      </div>
+
+      <!-- FORM TO CREATE TODOS -->
+      <div id="todo-form" class="row">
+        <div class="col-sm-8 col-sm-offset-2 text-center">
+          <form>
+            <div class="form-group">
+              <!-- BIND THIS VALUE TO formData.text IN ANGULAR -->
+              <input
+                id="newTodo"
+                type="text"
+                class="form-control input-lg text-center"
+                placeholder="What do you need to do?"
+                ng-model="formData.text"
+              />
+            </div>
+            <!-- createToDo() WILL CREATE NEW TODOS -->
+            <button
+              type="submit"
+              class="btn btn-primary btn-lg"
+              ng-click="createTodo()"
+            >
+              Add
+            </button>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <ul class="nav nav-tabs">
+      <li class="active">
+        <a data-toggle="tab" href="#all">All ({{ todos.length }})</a>
+      </li>
+      <li>
+        <a data-toggle="tab" href="#todo"
+          >Todo ({{ getActiveTodos().length }})</a
+        >
+      </li>
+      <li>
+        <a data-toggle="tab" href="#done"
+          >Done ({{ getCompletedTodos().length }})</a
+        >
+      </li>
+    </ul>
+
+    <div class="tab-content">
+      <!-- ALL TODOS SECTION -->
+      <div id="all" class="tab-pane active">
+        <div class="todo-section">
+          <h3 class="section-header">All Tasks</h3>
+          <div class="todo-list row">
+            <div class="col-sm-6 col-sm-offset-3">
+              <div class="checkbox" ng-repeat="todo in todos">
+                <label>
+                  <input
+                    type="checkbox"
+                    ng-click="updateTodo(todo._id)"
+                    ng-checked="todo.done"
+                  />
+                  <span
+                    ng-class="{'text-muted': todo.done, 'text-decoration-line-through': todo.done}"
+                    >{{ todo.text }}</span
+                  >
+                </label>
+                <span
+                  class="pull-right"
+                  ng-click="deleteTodo(todo._id)"
+                  style="cursor: pointer; color: red"
+                  >X</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- TODO SECTION -->
+      <div id="todo" class="tab-pane">
+        <div class="todo-section">
+          <h3 class="section-header">Todo Tasks</h3>
+          <div class="todo-list row">
+            <div class="col-sm-6 col-sm-offset-3">
+              <div class="checkbox" ng-repeat="todo in getActiveTodos()">
+                <label>
+                  <input
+                    type="checkbox"
+                    ng-click="updateTodo(todo._id)"
+                    ng-checked="todo.done"
+                  />
+                  {{ todo.text }}
+                </label>
+                <span
+                  class="pull-right"
+                  ng-click="deleteTodo(todo._id)"
+                  style="cursor: pointer; color: red"
+                  >X</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- DONE SECTION -->
+      <div id="done" class="tab-pane">
+        <div class="todo-section">
+          <h3 class="section-header">Done Tasks</h3>
+          <div class="todo-list row">
+            <div class="col-sm-6 col-sm-offset-3">
+              <div class="checkbox" ng-repeat="todo in getCompletedTodos()">
+                <label>
+                  <input
+                    type="checkbox"
+                    ng-click="updateTodo(todo._id)"
+                    ng-checked="todo.done"
+                  />
+                  <span class="text-muted">{{ todo.text }}</span>
+                </label>
+                <span
+                  class="pull-right"
+                  ng-click="deleteTodo(todo._id)"
+                  style="cursor: pointer; color: red"
+                  >X</span
+                >
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Bootstrap JS for tabs -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/1.11.0/jquery.min.js"></script>
+    <script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+  </body>
+</html>
