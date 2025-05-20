@@ -1,10 +1,12 @@
 import { useEffect, useState } from "react";
+import "./index.css";
 
 const API_BASE = "http://localhost:4000/api/todos";
 
 function App() {
   const [todos, setTodos] = useState([]);
   const [text, setText] = useState("");
+  const [listName, setListName] = useState("");
   const [activeTab, setActiveTab] = useState("all");
 
   useEffect(() => {
@@ -81,25 +83,35 @@ function App() {
     <div className="container">
       <div className="jumbotron text-center">
         <h1>
-          nodeTODO <span className="label label-info">{todos.length}</span>
+          nodeTODO {listName}
+          <span className="label label-info">{todos.length}</span>
         </h1>
-        <div id="todo-form" className="row">
+        <div className="row" style={{ marginBottom: "20px" }}>
           <div className="col-sm-8 col-sm-offset-2 text-center">
             <input
               type="text"
               className="form-control text-center"
-              placeholder="What do you need to do?"
-              value={text}
-              onChange={(e) => setText(e.target.value)}
-              onKeyDown={(e) => e.key === "Enter" && createTodo()}
+              placeholder="TODO name"
+              value={listName}
+              onChange={(e) => setListName(e.target.value)}
             />
-            <button
-              className="btn btn-primary btn-lg mt-3"
-              onClick={createTodo}
-            >
-              Add
-            </button>
           </div>
+        </div>
+      </div>
+
+      <div id="todo-form" className="row">
+        <div className="col-sm-8 col-sm-offset-2 text-center">
+          <input
+            type="text"
+            className="form-control text-center"
+            placeholder="What do you need to do?"
+            value={text}
+            onChange={(e) => setText(e.target.value)}
+            onKeyDown={(e) => e.key === "Enter" && createTodo()}
+          />
+          <button className="btn btn-primary btn-lg" onClick={createTodo}>
+            Add
+          </button>
         </div>
       </div>
 
