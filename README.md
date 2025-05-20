@@ -6,6 +6,7 @@ This project was bootstrapped with Create React App.
 
 - Terminal 1 : `node server.js` (on the root)
 - Terminal 2 : `npm run start` (on the root)
+  - go to `localhost:3000`
 
 ## Available Scripts
 
