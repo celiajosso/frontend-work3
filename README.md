@@ -1,17 +1,25 @@
-# Frontend work3: React Todo App
+# Frontend work 3: React Todo App
 
 ## Commands
 
 Do not forget to do `npm install` before.
 
-### Terminal 1 (in the root)
+### Terminal 1
 
-`node server.js`
+```
+node server.js
+```
 
-### Terminal 2 (in the root)
+### Terminal 2
 
-`npm run start`
+```
+npm run start
+```
 
 ## Navigation
 
 Go to `localhost:3000`
+
+## Warning
+
+Do not run if you are in the eduroam WiFi network! It won't work
